@@ -1,5 +1,7 @@
 import sys
+import json
 
+# parser plików 
 def parse_arguments():
     if len(sys.argv) != 3:
         print("Poprawne użycie: plik.exe ścieżka.x ścieżka.y")
@@ -8,7 +10,30 @@ def parse_arguments():
     output_file = sys.argv[2]
     return input_file, output_file
 
+# wczytuje .json ze ścieżki + obsługa błędów z tym związana
+def read_json(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        print("Poprawnie wczytano plik")
+        return data
+    except json.JSONDecodeError as e:
+        print(f"Błąd: nie można odczytać pliku {e}")
+        sys.exit(1)
+    except FileNotFoundError:
+        print(f"Błąd: nie znaleziono ścieżki {file_path}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Wystąpił błąd: {e}")
+        sys.exit(1)
+
+
 if __name__ == "__main__":
     input_file, output_file = parse_arguments()
-    print(f"Plik wejściowy: {input_file}")
-    print(f"Plik wyjściowy: {output_file}")
+
+    if input_file.endswith('.json'):
+        data = read_json(input_file)
+        print(data)
+    else:
+        print("Błąd: złe rozszerzenie pliku (wymagane rozszerzenie .json)")
+        sys.exit(1)
