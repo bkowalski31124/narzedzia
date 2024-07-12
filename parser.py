@@ -28,6 +28,16 @@ def read_json(file_path):
         sys.exit(1)
 
 
+def write_json(data, file_path):
+    try:
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+        print(f"Dane pomyślnie zapisane w {file_path}")
+    except Exception as e:
+        print(f"Wystąpił błąd podczas zapisywania pliku: {e}")
+        sys.exit(1)
+
+
 if __name__ == "__main__":
     input_file, output_file = parse_arguments()
 
@@ -35,5 +45,11 @@ if __name__ == "__main__":
         data = read_json(input_file)
         print(data)
     else:
-        print("Błąd: złe rozszerzenie pliku (wymagane rozszerzenie .json)")
+        print("Błąd: złe rozszerzenie pliku wejściowego(wymagane rozszerzenie .json)")
+        sys.exit(1)
+
+    if output_file.endswith('.json'):
+        write_json(data, output_file)
+    else:
+        print("Błąd: złe rozszerzenie pliku wyjściowego(wymagane rozszerzenie .json)")
         sys.exit(1)
